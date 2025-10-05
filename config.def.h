@@ -15,7 +15,7 @@ static const float urgentcolor[]           = COLOR(0xff0000ff);
 static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
 
 /* tagging - TAGCOUNT must be no greater than 31 */
-#define TAGCOUNT (9)
+#define TAGCOUNT (6)
 
 /* logging */
 static int log_level = WLR_ERROR;
@@ -23,6 +23,9 @@ static int log_level = WLR_ERROR;
 /* NOTE: ALWAYS keep a rule declared even if you don't use rules (e.g leave at least one example) */
 static const Rule rules[] = {
 	/* app_id             title       tags mask     isfloating   monitor */
+    { "floating",         NULL,       0,            1,           -1},
+    { NULL,    "File Transfer",       0,            1,           -1},
+    { "flying-foot",      NULL,       0,            1,           -1},
 	/* examples: */
 	{ "Gimp_EXAMPLE",     NULL,       0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
 	{ "firefox_EXAMPLE",  NULL,       1 << 8,       0,           -1 }, /* Start on ONLY tag "9" */
@@ -45,7 +48,7 @@ static const Layout layouts[] = {
 static const MonitorRule monrules[] = {
 	/* name       mfact  nmaster scale layout       rotate/reflect                x    y */
 	/* example of a HiDPI laptop monitor: */
-	{ "eDP-1",    0.5f,  1,      1.5,  &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
+	{ "eDP-1",    0.5f,  1,      1.25,  &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
 	/* defaults */
 	{ NULL,       0.55f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
 };
@@ -116,32 +119,52 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+#define CMDPR(cmd) { .v = (const char*[]){ cmd, NULL } }
 
 /* commands */
+
 static const char *termcmd[] = { "foot", NULL };
-static const char *menucmd[] = { "wmenu-run", NULL };
+static const char *termclientcmd[] = { "footclient", NULL };
+
+/* Brightness */
+
+static const char *bright_up[]      = { "/usr/bin/xbacklight", "-inc", "5",        NULL };
+static const char *bright_down[]    = { "/usr/bin/xbacklight", "-dec", "5",        NULL };
+
+
+/* Audio */
+static const char *mute_cmd[]         = { "/usr/bin/wpctl", "set-mute", "@DEFAULT_SINK@", "toggle",                     NULL};
+static const char *mutemic_cmd[]      = { "/usr/bin/wpctl", "set-mute", "@DEFAULT_SOURCE@", "toggle",                   NULL};
+static const char *raise_audio_cmd[]  = { "/usr/bin/wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", "--limit", "1.0",    NULL};
+static const char *lower_audio_cmd[]  = { "/usr/bin/wpctl", "set-volume", "@DEFAULT_SINK@", "5%-",                      NULL};
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
-	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = menucmd} },
+	{ MODKEY,                    XKB_KEY_e,          spawn,          SHCMD("emacsclient -c -a ''") },
+	{ MODKEY,                    XKB_KEY_x,          spawn,          SHCMD("tofi-drun | xargs -r exec --") },
+	{ MODKEY,                    XKB_KEY_p,          spawn,          SHCMD("/home/ssalva/.local/share/bin/slurpshot") },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
-	{ MODKEY,                    XKB_KEY_b,          togglebar,      {0} },
+	{ MODKEY,                    XKB_KEY_Return,     spawn,          {.v = termclientcmd} },
+  // { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Tab,        spawn,          SHCMD("footclient -a 'flying-foot' --window-size-pixels 1400x800 htop") },
+	{ MODKEY,                    XKB_KEY_b,          spawn,          SHCMD("dwlb -toggle-visibility all") },
 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_d,          incnmaster,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05f} },
 	{ MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05f} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_L,          spawn,          SHCMD("swaylock --daemonize -c ~/.config/swaylock/config") },
 	{ MODKEY,                    XKB_KEY_Return,     zoom,           {0} },
 	{ MODKEY,                    XKB_KEY_Tab,        view,           {0} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_C,          killclient,     {0} },
-	{ MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                    XKB_KEY_f,          setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                    XKB_KEY_q,          killclient,     {0} },
+	{ MODKEY,                    XKB_KEY_t,          spawn,          CMDPR("thunar") },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_T,          setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                    XKB_KEY_f,         togglefullscreen, {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_F,          setlayout,      {.v = &layouts[1]} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_M,          setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                    XKB_KEY_space,      setlayout,      {0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,      togglefloating, {0} },
-	{ MODKEY,                    XKB_KEY_e,         togglefullscreen, {0} },
 	{ MODKEY,                    XKB_KEY_0,          view,           {.ui = ~0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_parenright, tag,            {.ui = ~0} },
 	{ MODKEY,                    XKB_KEY_comma,      focusmon,       {.i = WLR_DIRECTION_LEFT} },
@@ -167,6 +190,16 @@ static const Key keys[] = {
 #define CHVT(n) { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_XF86Switch_VT_##n, chvt, {.ui = (n)} }
 	CHVT(1), CHVT(2), CHVT(3), CHVT(4), CHVT(5), CHVT(6),
 	CHVT(7), CHVT(8), CHVT(9), CHVT(10), CHVT(11), CHVT(12),
+
+	/* Brightness */
+	{ 0, XKB_KEY_XF86MonBrightnessUp,       spawn,          {.v = bright_up} },
+	{ 0, XKB_KEY_XF86MonBrightnessDown,     spawn,          {.v = bright_down} },
+
+	/* Audio */
+	{ 0, XKB_KEY_XF86AudioMute,             spawn,          {.v = mute_cmd} },
+	{ 0, XKB_KEY_XF86AudioMicMute,          spawn,          {.v = mutemic_cmd} },
+	{ 0, XKB_KEY_XF86AudioRaiseVolume,      spawn,          {.v = raise_audio_cmd} },
+	{ 0, XKB_KEY_XF86AudioLowerVolume,      spawn,          {.v = lower_audio_cmd} }
 };
 
 static const Button buttons[] = {
