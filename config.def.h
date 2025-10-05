@@ -14,6 +14,10 @@ static const float urgentcolor[]           = COLOR(0xff0407ff);
 /* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
 static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
 
+static const int smartgaps                 = 1;  /* 1 means no outer gap when there is only one window */
+static int gaps                            = 1;  /* 1 means gaps between windows are added */
+static const unsigned int gappx            = 6; /* gap pixel between windows */
+
 /* tagging - TAGCOUNT must be no greater than 31 */
 #define TAGCOUNT (6)
 
@@ -156,6 +160,7 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05f} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_L,          spawn,          SHCMD("swaylock --daemonize -c ~/.config/swaylock/config") },
 	{ MODKEY,                    XKB_KEY_Return,     zoom,           {0} },
+	{ MODKEY,                    XKB_KEY_g,          togglegaps,     {0} },
 	{ MODKEY,                    XKB_KEY_Tab,        view,           {0} },
 	{ MODKEY,                    XKB_KEY_q,          killclient,     {0} },
 	{ MODKEY,                    XKB_KEY_t,          spawn,          CMDPR("thunar") },
