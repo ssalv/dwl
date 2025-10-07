@@ -6,17 +6,17 @@
 /* appearance */
 static const int sloppyfocus               = 1;  /* focus follows mouse */
 static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will disable idle tracking even if it's surface isn't visible  */
-static const unsigned int borderpx         = 2;  /* border pixel of windows */
+static const unsigned int borderpx         = 4;  /* border pixel of windows */
 static const float rootcolor[]             = COLOR(0x000000ff);
-static const float bordercolor[]           = COLOR(0x28bbf8ff);
-static const float focuscolor[]            = COLOR(0xff4a4aff);
+static const float bordercolor[]           = COLOR(0x000000ff);
+static const float focuscolor[]            = COLOR(0x28bbf8ff);
 static const float urgentcolor[]           = COLOR(0xff0407ff);
 /* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
 static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
 
 static const int smartgaps                 = 1;  /* 1 means no outer gap when there is only one window */
 static int gaps                            = 1;  /* 1 means gaps between windows are added */
-static const unsigned int gappx            = 6; /* gap pixel between windows */
+static const unsigned int gappx            = 12; /* gap pixel between windows */
 
 /* tagging - TAGCOUNT must be no greater than 31 */
 #define TAGCOUNT (6)
@@ -51,10 +51,9 @@ static const Layout layouts[] = {
 /* NOTE: ALWAYS add a fallback rule, even if you are completely sure it won't be used */
 static const MonitorRule monrules[] = {
 	/* name       mfact  nmaster scale layout       rotate/reflect                x    y */
-	/* example of a HiDPI laptop monitor: */
-	{ "eDP-1",    0.5f,  1,      1.25,  &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
+	{ "eDP-1",    0.5f,  1,     1.25,  &layouts[0],  WL_OUTPUT_TRANSFORM_NORMAL,   -1,    -1 },
 	/* defaults */
-	{ NULL,       0.55f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
+	{ NULL,       0.55f, 1,     1,     &layouts[0],  WL_OUTPUT_TRANSFORM_NORMAL,   -1,    -1 },
 };
 
 /* keyboard */
