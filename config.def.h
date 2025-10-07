@@ -18,6 +18,8 @@ static const int smartgaps                 = 1;  /* 1 means no outer gap when th
 static int gaps                            = 1;  /* 1 means gaps between windows are added */
 static const unsigned int gappx            = 12; /* gap pixel between windows */
 
+static const unsigned int swipe_min_threshold = 0;
+
 /* tagging - TAGCOUNT must be no greater than 31 */
 #define TAGCOUNT (6)
 
@@ -141,6 +143,7 @@ static const char *mutemic_cmd[]      = { "/usr/bin/wpctl", "set-mute", "@DEFAUL
 static const char *raise_audio_cmd[]  = { "/usr/bin/wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", "--limit", "1.0",    NULL};
 static const char *lower_audio_cmd[]  = { "/usr/bin/wpctl", "set-volume", "@DEFAULT_SINK@", "5%-",                      NULL};
 
+
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
@@ -161,6 +164,8 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_Return,     zoom,           {0} },
 	{ MODKEY,                    XKB_KEY_g,          togglegaps,     {0} },
 	{ MODKEY,                    XKB_KEY_Tab,        view,           {0} },
+	{ MODKEY,                    XKB_KEY_a,          shiftview,      { .i = -1 } },
+	{ MODKEY,                    XKB_KEY_semicolon,  shiftview,      { .i = 1 } },
 	{ MODKEY,                    XKB_KEY_q,          killclient,     {0} },
 	{ MODKEY,                    XKB_KEY_t,          spawn,          CMDPR("thunar") },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_T,          setlayout,      {.v = &layouts[0]} },
@@ -210,4 +215,11 @@ static const Button buttons[] = {
 	{ MODKEY, BTN_LEFT,   moveresize,     {.ui = CurMove} },
 	{ MODKEY, BTN_MIDDLE, togglefloating, {0} },
 	{ MODKEY, BTN_RIGHT,  moveresize,     {.ui = CurResize} },
+};
+
+static const Gesture gestures[] = {
+	{ MODKEY, SWIPE_LEFT, 3, shiftview, { .i = 1 } },
+	{ MODKEY, SWIPE_RIGHT, 3, shiftview, { .i = -1 } },
+	{ MODKEY, SWIPE_UP, 3, focusstack, {.i = 1} },
+	{ MODKEY, SWIPE_DOWN, 3, focusstack, {.i = -1} },
 };
