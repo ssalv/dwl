@@ -6,17 +6,17 @@
 /* appearance */
 static const int sloppyfocus               = 1;  /* focus follows mouse */
 static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will disable idle tracking even if it's surface isn't visible  */
-static const unsigned int borderpx         = 4;  /* border pixel of windows */
+static const unsigned int borderpx         = 3;  /* border pixel of windows */
 static const float rootcolor[]             = COLOR(0x000000ff);
-static const float bordercolor[]           = COLOR(0x000000ff);
-static const float focuscolor[]            = COLOR(0x28bbf8ff);
+static const float bordercolor[]           = COLOR(0xcecdceff);
+static const float focuscolor[]            = COLOR(0xa7423fff);
 static const float urgentcolor[]           = COLOR(0xff0407ff);
 /* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
 static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
 
 static const int smartgaps                 = 1;  /* 1 means no outer gap when there is only one window */
-static int gaps                            = 1;  /* 1 means gaps between windows are added */
-static const unsigned int gappx            = 12; /* gap pixel between windows */
+static int gaps                            = 0;  /* 1 means gaps between windows are added */
+static const unsigned int gappx            = 8; /* gap pixel between windows */
 
 static const unsigned int swipe_min_threshold = 0;
 
@@ -32,9 +32,9 @@ static const Rule rules[] = {
     { "floating",         NULL,       0,            1,           -1},
     { NULL,    "File Transfer",       0,            1,           -1},
     { "flying-foot",      NULL,       0,            1,           -1},
-	/* examples: */
-	{ "Gimp_EXAMPLE",     NULL,       0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
-	{ "firefox_EXAMPLE",  NULL,       1 << 8,       0,           -1 }, /* Start on ONLY tag "9" */
+	  /* examples: */
+	  { "Gimp_EXAMPLE",     NULL,       0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
+	  { "firefox_EXAMPLE",  NULL,       1 << 8,       0,           -1 }, /* Start on ONLY tag "9" */
 };
 
 /* layout(s) */
@@ -218,8 +218,8 @@ static const Button buttons[] = {
 };
 
 static const Gesture gestures[] = {
-	{ MODKEY, SWIPE_LEFT, 3, shiftview, { .i = 1 } },
-	{ MODKEY, SWIPE_RIGHT, 3, shiftview, { .i = -1 } },
-	{ MODKEY, SWIPE_UP, 3, focusstack, {.i = 1} },
-	{ MODKEY, SWIPE_DOWN, 3, focusstack, {.i = -1} },
+	{ 0, SWIPE_LEFT,  3, shiftview,  { .i = 1 }    },
+	{ 0, SWIPE_RIGHT, 3, shiftview,  { .i = -1 }   },
+	{ 0, SWIPE_UP,    3, focusstack, { .i = 1 }    },
+	{ 0, SWIPE_DOWN,  3, focusstack, { .i = -1 }   },
 };
