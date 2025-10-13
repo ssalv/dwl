@@ -15,8 +15,8 @@ static const float urgentcolor[]           = COLOR(0xff0407ff);
 static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
 
 static const int smartgaps                 = 1;  /* 1 means no outer gap when there is only one window */
-static int gaps                            = 0;  /* 1 means gaps between windows are added */
-static const unsigned int gappx            = 8; /* gap pixel between windows */
+static int gaps                            = 1;  /* 1 means gaps between windows are added */
+static const unsigned int gappx            = 4; /* gap pixel between windows */
 
 static const unsigned int swipe_min_threshold = 0;
 
