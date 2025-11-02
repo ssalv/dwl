@@ -61,7 +61,7 @@ static const Layout layouts[] = {
  * used */
 static const MonitorRule monrules[] = {
     /* name       mfact  nmaster scale layout       rotate/reflect x    y */
-    {"eDP-1", 0.5f, 1, 1.25, &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, -1, -1},
+    {"eDP-1", 0.5f, 1, 1.15, &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, -1, -1},
     /* defaults */
     {NULL, 0.55f, 1, 1, &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, -1, -1},
 };
