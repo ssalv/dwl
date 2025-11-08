@@ -181,7 +181,7 @@ static const Key keys[] = {
      SHCMD("/home/ssalva/.local/share/bin/slurpshot")},
     {MODKEY | WLR_MODIFIER_SHIFT, XKB_KEY_Y, spawn,
      SHCMD("/home/ssalva/.local/bin/yubikey_redirect.sh")},
-    {MODKEY | WLR_MODIFIER_SHIFT, XKB_KEY_Return, spawn, {.v = termcmd}},
+    {MODKEY | WLR_MODIFIER_SHIFT, XKB_KEY_Return, spawn, SHCMD("emacsclient -c --eval \"(+vterm/here '/home/ssalva)\"")},
     {MODKEY, XKB_KEY_Return, spawn, {.v = termclientcmd}},
     {MODKEY | WLR_MODIFIER_SHIFT, XKB_KEY_Tab, spawn,
      SHCMD("footclient -a 'flying-foot' --window-size-pixels 1400x800 htop")},
